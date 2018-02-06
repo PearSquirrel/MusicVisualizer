@@ -24,9 +24,7 @@ PApplet parent;
 public BarGraph(PApplet parent) {
   this.parent = parent;
   //setupFFT();
-  System.out.println("TEST");
   setData(new ArrayList<Float>());
-  System.out.println("TEST2");
 }
 
 public void setTitle(String title) {
@@ -46,8 +44,8 @@ public void setData(List<Float> histogram) {
   
   // Setup for the plot
   plot3 = new GPlot(parent);
-  plot3.setPos(0, 300);
-  plot3.setDim(250, 250);
+  plot3.setPos(0, 0);
+  plot3.setDim(300, 300);
   plot3.setYLim(-0.02, 0.45);
   plot3.setXLim(6, -5);
   plot3.getTitle().setText(this.title);
@@ -113,12 +111,10 @@ void drawFFT() {
   for (int i = 0; i < fft.avgSize(); i++) {
     points.add(i + 1 - fft.avgSize()/2.0, fft.getAvg(i), "H" + i);
     avg = fft.getAvg(i);
-    System.out.println(avg);
   }
-  System.out.println();
   
   plot3.setXLim(fft.avgSize()/2+1, -fft.avgSize()/2);
-  plot3.setYLim(-0.02, avg);
+  //plot3.setYLim(-0.02, avg);
 
 
   plot3.setPoints(points);
