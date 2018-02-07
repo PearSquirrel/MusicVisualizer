@@ -10,9 +10,10 @@ FFT fft;
 
 BarGraph barGraph1;
 PieChart pieChart1;
+LineGraph lineGraph1;
 
 public void setup() {
-  size(835, 425);
+  size(1240, 400);
   minim = new Minim(this);
   in = minim.getLineIn(Minim.STEREO, 512);
   fft = new FFT(in.bufferSize(), in.sampleRate());
@@ -36,11 +37,13 @@ public void setup() {
   barGraph1.startListening();
   
   pieChart1 = new PieChart(this);
-  //barGraph1.stopListening();
-  //barGraph1.setup();
+  lineGraph1 = new LineGraph(this);
+  lineGraph1.startListening();
 }
 
 public void draw() {
-   barGraph1.draw();
-   pieChart1.draw();
+  background(0);
+  barGraph1.draw();
+  pieChart1.draw();
+  lineGraph1.draw();
 }
