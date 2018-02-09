@@ -30,33 +30,38 @@ public void setup() {
   in = minim.getLineIn(Minim.STEREO, 512);
   fft = new FFT(in.bufferSize(), in.sampleRate());
   
-  ArrayList<Float> gaussianStack = new ArrayList<Float>(10);  
+  ArrayList<Float> gaussianStack = new ArrayList<Float>();  
   gaussianStack.add(0, 13.0);
   gaussianStack.add(1, 20.0);
   gaussianStack.add(2, 11.0);
   gaussianStack.add(3, 12.0);
   gaussianStack.add(4, 2.0);
   gaussianStack.add(5, 56.0);
+  gaussianStack.add(6, 25.0);
+  gaussianStack.add(7, 22.0);
+  gaussianStack.add(8, 19.0);
+  gaussianStack.add(9, 21.0);
+  gaussianStack.add(10, 4.0);
+  gaussianStack.add(11, 7.0);
   
   slideshow = new Slideshow();
     
   barGraph1 = new BarGraph(this);
-  barGraph1.setTitle("Bar Graph #1");
+  barGraph1.setTitle("Histogram of Data");
   barGraph1.setData(gaussianStack);
-  barGraph1.setAudioInputs(in, fft);
-  barGraph1.startListening();
-  barGraph1.setCoords(width/2-200,height/2-100,300,300);
-
+  //barGraph1.setAudioInputs(in, fft);
+  //barGraph1.startListening();
+  barGraph1.setCoords(width/2-300,height/2-250,500,500);
   
   pieChart1 = new PieChart(this);
-  pieChart1.setAudioInputs(in);
-  pieChart1.startListening();
-  pieChart1.setCoords(width/2-200,height/2-100,300,300);
+  //pieChart1.setAudioInputs(in);
+  //pieChart1.startListening();
+  pieChart1.setCoords(width/2-300,height/2-250,500,500);
   
   lineGraph1 = new LineGraph(this);
-  lineGraph1.setCoords(width/2-200,height/2-100,300,300);
-  lineGraph1.setAudioInputs(in);
-  lineGraph1.startListening();
+  lineGraph1.setCoords(width/2-300,height/2-250,500,500);
+  //lineGraph1.setAudioInputs(in);
+  //lineGraph1.startListening();
   
   ArrayList<Slide> slides = new ArrayList<Slide>();
   slides.add(new Slide("slide_bgs/1.jpeg"));
@@ -67,7 +72,7 @@ public void setup() {
   
   // lazy copying instead of translating, good enough for now
   barGraph2 = new BarGraph(this);
-  barGraph2.setTitle("Bar Graph #1");
+  barGraph2.setTitle("Histogram of Data");
   barGraph2.setData(gaussianStack);
   barGraph2.setAudioInputs(in, fft);
   barGraph2.startListening();

@@ -54,11 +54,11 @@ public class PieChart {
   
     // Set the plot title and the axis labels
     plot.setTitleText(this.title + " (" + this.subtitle + ")");
-    plot.getXAxis().setAxisLabelText("x axis");
-    plot.getYAxis().setAxisLabelText("y axis");
+    //plot.getXAxis().setAxisLabelText("x axis");
+    //plot.getYAxis().setAxisLabelText("y axis");
   
     // Activate the panning effect
-    plot.activatePanning();
+    //plot.activatePanning();
     
     // add a layer per slice of pie
     for (int i = 0; i < labels.length; i++) {
@@ -128,6 +128,7 @@ void drawFFT() {
   int size3 = size;
   
   private void drawPie(GPlot plot) {
+    float scale = figureWidth/300.0;
     if (isListening) {
     beat.detect(in.mix);
     if (beat.isSnare()) {
@@ -173,14 +174,13 @@ void drawFFT() {
       angle_2 = angle_1;
       angle_1 += data[i] * num;
       
-      // TODO: remove hard-coded values so that resizing works nicely
       fillColor(i);
       if (i % 3 == 0) {
-        arc(plotWidth/2, -plotHeight/2, size1, size1, radians(angle_2), radians(angle_1));
+        arc(plotWidth/2, -plotHeight/2, size1*scale, size1*scale, radians(angle_2), radians(angle_1));
       } else if (i % 3 == 1) {
-        arc(plotWidth/2, -plotHeight/2, size2, size2, radians(angle_2), radians(angle_1));
+        arc(plotWidth/2, -plotHeight/2, size2*scale, size2*scale, radians(angle_2), radians(angle_1));
       } else {
-        arc(plotWidth/2, -plotHeight/2, size3, size3, radians(angle_2), radians(angle_1));        
+        arc(plotWidth/2, -plotHeight/2, size3*scale, size3*scale, radians(angle_2), radians(angle_1));        
       }
     }
   }
@@ -189,12 +189,12 @@ void drawFFT() {
     plot.beginDraw();
     plot.drawBackground();
     plot.drawBox();
-    plot.drawXAxis();
-    plot.drawYAxis();
-    plot.drawTopAxis();
-    plot.drawRightAxis();
+    //plot.drawXAxis();
+    //plot.drawYAxis();
+    //plot.drawTopAxis();
+    //plot.drawRightAxis();
     plot.drawTitle();
-    plot.getMainLayer().drawPoints();
+    //plot.getMainLayer().drawPoints();
     //plot.getLayer("surface").drawFilledContour(GPlot.HORIZONTAL, 0);
     drawPie(plot);
     // make pie slices into layers and replace the legend with real stuff

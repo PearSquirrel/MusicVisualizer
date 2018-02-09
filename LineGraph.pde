@@ -22,8 +22,8 @@ public class LineGraph {
   
   PFont font = createFont("Arial", 14, true);
   
-  String title = "Convergent Expertise Distribution";
-  String subtitle = "Spring 2018";
+  String title = "Bitcoin Price Prediction";
+  String subtitle = "Build Team Project";
   
   // FFT stuff
   Minim minim;
@@ -54,10 +54,11 @@ public class LineGraph {
     }
     
     // Set the plot title and the axis labels
-    plot.setTitleText("A very simple example");
+    plot.setTitleText(title);
     //plot.getXAxis().setAxisLabelText("x axis");
     //plot.getYAxis().setAxisLabelText("y axis");
-  
+    plot.getYAxis().getAxisLabel().setText("Price ($)");
+    plot.getXAxis().getAxisLabel().setText("Time (days since 10/1/2017)");
     // Add the points
     plot.setPoints(points);
     

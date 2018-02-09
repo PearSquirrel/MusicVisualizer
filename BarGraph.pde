@@ -62,22 +62,22 @@ public void setData(List<Float> histogram) {
   plot3.setDim(figureWidth, figureHeight);
   plot3.setYLim(-0.02, 0.45);
   //plot3.setYLim(-0.02, 0.45);
-  plot3.setXLim(6, -5);
+  plot3.setXLim(histogram.size()/2+1, -histogram.size()/2);
   plot3.getTitle().setText(this.title);
   plot3.getTitle().setTextAlignment(LEFT);
   plot3.getTitle().setRelativePos(0);
-  plot3.getYAxis().getAxisLabel().setText("Relative probability");
+  plot3.getYAxis().getAxisLabel().setText("Frequency");
   plot3.getYAxis().getAxisLabel().setTextAlignment(RIGHT);
   plot3.getYAxis().getAxisLabel().setRelativePos(1);
   plot3.setPoints(points);
   plot3.startHistograms(GPlot.VERTICAL);
   plot3.getHistogram().setDrawLabels(true);
   plot3.getHistogram().setRotateLabels(true);
-  /*plot3.getHistogram().setBgColors(new color[] {
+  plot3.getHistogram().setBgColors(new color[] {
     color(0, 0, 255, 50), color(0, 0, 255, 100), 
     color(0, 0, 255, 150), color(0, 0, 255, 200)
   }
-  );*/
+  );
 
   // Setup the mouse actions
   plot3.activateCentering(LEFT, GPlot.CTRLMOD);
