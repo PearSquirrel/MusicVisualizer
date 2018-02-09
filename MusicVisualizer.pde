@@ -37,10 +37,6 @@ public void setup() {
   gaussianStack.add(3, 12.0);
   gaussianStack.add(4, 2.0);
   gaussianStack.add(5, 56.0);
-/*
-  gaussianStack[7] = 35;
-  gaussianStack[8] = 10;
-  gaussianStack[9] = 45;*/
   
   slideshow = new Slideshow();
     
@@ -101,6 +97,7 @@ public void setup() {
   }
   
   myMovie = new Movie(this, "skywalker.mp4");
+  logo = loadImage("convergent-logo.png");
 }
 
 void mousePressed() {
@@ -111,7 +108,6 @@ void mousePressed() {
 int[] tint = new int[3];
 boolean isTinted = false;
 void keyPressed() {
-  System.out.println(key +" " + keyCode + " b " + (int)'b');
   if (key == CODED) {
     if (keyCode == DOWN) {
       isTinted = false;
@@ -123,6 +119,7 @@ void keyPressed() {
     }
     switch (key) {
     case 'm':
+    slideshow.setSlide(5);
     myMovie.play();
     playingMovie = true;
     default:
@@ -136,11 +133,82 @@ void movieEvent(Movie m) {
   m.read();
 }
 
+int convergentHeight = 0;
+PImage logo;
+int logoX;
+int logoWidth;
+int logoY;
+int movieWidth = 640;
+int movieHeight = 360;
+int movieX = 0;
+int movieY = 0;
+
 public void draw() {
   slideshow.draw();
-  if (playingMovie) {
-    tint(255, 20);
-    image(myMovie, 0, 0);
+  if (playingMovie && slideshow.curSlide() == 5 && myMovie.time() >= 1) {
+    BarGraph b = slideshow.get(5).b;
+    PieChart p = slideshow.get(5).p;
+    LineGraph l = slideshow.get(5).l;
+    if (b.posX >= 10) {
+      b.setCoords(b.posX-10, b.posY+12, b.figureWidth, b.figureHeight);
+      p.setCoords(p.posX, p.posY+12, p.figureWidth, p.figureHeight);
+      l.setCoords(l.posX+10, l.posY+12, l.figureWidth, l.figureHeight);
+    } else {
+      if (convergentHeight < height/2+1) {
+        rectMode(CENTER);
+        fill(0);
+        rect(width/2, height/4, width, convergentHeight+=10);
+      } else if (myMovie.time() < 24) {
+        imageMode(CENTER);
+        logoX = width/2;
+        logoY = height/4;
+        logoWidth = width/2;
+        image(logo, logoX, logoY, logoWidth, (int)(logo.height*(width/2.0)/logo.width));
+      }
+    }
+
+    if (myMovie.time() >= 24 && myMovie.time() < 29 && logoX < (width-logoWidth/2)+50){
+        rectMode(CENTER);
+        fill(0);
+        rect(width/2, height/4, width, convergentHeight);
+        imageMode(CENTER);
+        image(logo, logoX+=5, logoY+=2, logoWidth, (int)(logo.height*(width/2.0)/logo.width));
+    }
+    
+    if (myMovie.time() >= 29 && myMovie.time() < 60) {
+      imageMode(CORNER);
+      if (movieHeight < height/2) {
+        image(myMovie, movieX, movieY, movieWidth+=5, movieHeight+=5*(360.0/640));
+      } else {
+        image(myMovie, movieX, movieY, movieWidth, movieHeight);
+      }
+    }
+    
+    if (myMovie.time() >= 60) {
+      if (myMovie.time() < 68) {
+      rectMode(CORNER);
+      imageMode(CORNER);
+      if (convergentHeight < height) {
+        fill(0);
+        rect(0, 0, width, convergentHeight+=10*(360.0/640)); 
+      } else {
+        fill(0);
+        rect(0, 0, width, convergentHeight); 
+      }
+      if (movieWidth < width) {
+        image(myMovie, movieX, movieY, movieWidth+=10, movieHeight+=10*(360.0/640));
+      } else {
+        image(myMovie, movieX, movieY, movieWidth, movieHeight);
+      }
+    } else {
+      rectMode(CORNER);
+      imageMode(CORNER);
+      fill(0);
+      rect(0, 0, width, convergentHeight);
+      image(myMovie, movieX, movieY, movieWidth, movieHeight);
+      playingMovie = false;
+      slideshow.nextSlide();
+    }
+    }
   }
-  
 }

@@ -23,6 +23,14 @@ public class Slideshow {
     }
     return this;
   }
+  
+  public int curSlide() {
+    return curSlide;
+  }
+  
+  public Slide get(int index) {
+    return slides.get(index);
+  }
     
 void setup()
 {
@@ -35,8 +43,6 @@ public void setSlide(int index) {
 }
 
 public void nextSlide() {
-  System.out.println("NEXT SLIDE");
-  System.out.println("CUR SLIDE" + curSlide + " SLIDES SIZE" + slides.size());
   if (curSlide < slides.size()-1) {
     curSlide++;
   } else {
