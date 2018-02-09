@@ -3,6 +3,10 @@ import java.util.Random;
 import ddf.minim.analysis.*;
 import ddf.minim.*;
 import java.lang.*;
+import processing.video.*;
+
+Movie myMovie;
+boolean playingMovie = false;
 
 Minim minim;
 AudioInput in;
@@ -95,11 +99,13 @@ public void setup() {
   for (Slide slide : slides) {
     slideshow.add(slide);
   }
+  
+  myMovie = new Movie(this, "skywalker.mp4");
 }
 
 void mousePressed() {
-  System.out.println("MOUSE PRESSED");
-  slideshow.nextSlide();
+  //System.out.println("MOUSE PRESSED");
+  //slideshow.nextSlide();
 }
 
 int[] tint = new int[3];
@@ -111,29 +117,30 @@ void keyPressed() {
       isTinted = false;
     }
   } else {
-    if (key == 'b') {
-      isTinted = true;
-      tint[0] = 0;
-      tint[1] = 153;
-      tint[2] = 204;  // Tint blue
-    } else if (key == 'a') {
-      isTinted = false;
+    // for the demo, there are 7 slides total
+    if (key >= '1' && key <= '7') {
+      slideshow.setSlide((int) (key - '1'));
+    }
+    switch (key) {
+    case 'm':
+    myMovie.play();
+    playingMovie = true;
+    default:
+      break;
     }
   }
 }
 
+// Called every time a new frame is available to read
+void movieEvent(Movie m) {
+  m.read();
+}
+
 public void draw() {
-  //background(0);
-  if (isTinted) {
-    tint(tint[0], tint[1], tint[2]);
-    //background(123);
-  }
   slideshow.draw();
-  if (isTinted) {
-    tint(tint[0], tint[1], tint[2]);
-    //background(123);
+  if (playingMovie) {
+    tint(255, 20);
+    image(myMovie, 0, 0);
   }
-  //barGraph1.draw();
-  //pieChart1.draw();
-  //lineGraph1.draw();
+  
 }

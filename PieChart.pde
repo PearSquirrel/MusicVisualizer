@@ -175,9 +175,9 @@ void drawFFT() {
       
       // TODO: remove hard-coded values so that resizing works nicely
       fillColor(i);
-      if (i % 2 == 0) {
+      if (i % 3 == 0) {
         arc(plotWidth/2, -plotHeight/2, size1, size1, radians(angle_2), radians(angle_1));
-      } else if (i % 2 == 1) {
+      } else if (i % 3 == 1) {
         arc(plotWidth/2, -plotHeight/2, size2, size2, radians(angle_2), radians(angle_1));
       } else {
         arc(plotWidth/2, -plotHeight/2, size3, size3, radians(angle_2), radians(angle_1));        
