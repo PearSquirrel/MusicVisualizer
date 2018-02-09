@@ -12,8 +12,16 @@ BarGraph barGraph1;
 PieChart pieChart1;
 LineGraph lineGraph1;
 
+BarGraph barGraph2;
+PieChart pieChart2;
+LineGraph lineGraph2;
+Slideshow slideshow;
+
 public void setup() {
-  size(1240, 400);
+  surface.setResizable(true);
+  fullScreen();
+  
+  //size(1240, 400);
   minim = new Minim(this);
   in = minim.getLineIn(Minim.STEREO, 512);
   fft = new FFT(in.bufferSize(), in.sampleRate());
@@ -30,20 +38,102 @@ public void setup() {
   gaussianStack[8] = 10;
   gaussianStack[9] = 45;*/
   
+  slideshow = new Slideshow();
+    
   barGraph1 = new BarGraph(this);
   barGraph1.setTitle("Bar Graph #1");
   barGraph1.setData(gaussianStack);
   barGraph1.setAudioInputs(in, fft);
   barGraph1.startListening();
+  barGraph1.setCoords(width/2-200,height/2-100,300,300);
+
   
   pieChart1 = new PieChart(this);
+  pieChart1.setAudioInputs(in);
+  pieChart1.startListening();
+  pieChart1.setCoords(width/2-200,height/2-100,300,300);
+  
   lineGraph1 = new LineGraph(this);
+  lineGraph1.setCoords(width/2-200,height/2-100,300,300);
+  lineGraph1.setAudioInputs(in);
   lineGraph1.startListening();
+  
+  ArrayList<Slide> slides = new ArrayList<Slide>();
+  slides.add(new Slide("slide_bgs/1.jpeg"));
+  slides.add(new Slide("slide_bgs/2.jpeg"));
+  slides.add(new Slide("slide_bgs/3.jpeg").add(lineGraph1));
+  slides.add(new Slide("slide_bgs/4.jpeg").add(pieChart1));
+  slides.add(new Slide("slide_bgs/5.jpeg").add(barGraph1));
+  
+  // lazy copying instead of translating, good enough for now
+  barGraph2 = new BarGraph(this);
+  barGraph2.setTitle("Bar Graph #1");
+  barGraph2.setData(gaussianStack);
+  barGraph2.setAudioInputs(in, fft);
+  barGraph2.startListening();
+  barGraph2.setCoords(100,height/2-100,300,300);
+  
+  pieChart2 = new PieChart(this);
+  pieChart2.setAudioInputs(in);
+  pieChart2.startListening();
+  pieChart2.setCoords(525,height/2-100,300,300);
+  
+  lineGraph2 = new LineGraph(this);
+  lineGraph2.setAudioInputs(in);
+  lineGraph2.startListening();
+  lineGraph2.setCoords(950,height/2-100,300,300);
+
+  slides.add(new Slide("slide_bgs/6.jpeg")
+    .add(lineGraph2)
+    .add(barGraph2)
+    .add(pieChart2)
+  );
+  
+  slides.add(new Slide("slide_bgs/7.jpeg"));
+
+  
+  for (Slide slide : slides) {
+    slideshow.add(slide);
+  }
+}
+
+void mousePressed() {
+  System.out.println("MOUSE PRESSED");
+  slideshow.nextSlide();
+}
+
+int[] tint = new int[3];
+boolean isTinted = false;
+void keyPressed() {
+  System.out.println(key +" " + keyCode + " b " + (int)'b');
+  if (key == CODED) {
+    if (keyCode == DOWN) {
+      isTinted = false;
+    }
+  } else {
+    if (key == 'b') {
+      isTinted = true;
+      tint[0] = 0;
+      tint[1] = 153;
+      tint[2] = 204;  // Tint blue
+    } else if (key == 'a') {
+      isTinted = false;
+    }
+  }
 }
 
 public void draw() {
-  background(0);
-  barGraph1.draw();
-  pieChart1.draw();
-  lineGraph1.draw();
+  //background(0);
+  if (isTinted) {
+    tint(tint[0], tint[1], tint[2]);
+    //background(123);
+  }
+  slideshow.draw();
+  if (isTinted) {
+    tint(tint[0], tint[1], tint[2]);
+    //background(123);
+  }
+  //barGraph1.draw();
+  //pieChart1.draw();
+  //lineGraph1.draw();
 }

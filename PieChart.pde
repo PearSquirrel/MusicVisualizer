@@ -1,6 +1,13 @@
 public class PieChart {
+      
+  int posX = 425;
+  int posY = 0;
+  int figureWidth = 300;
+  int figureHeight = 300;
+  
   private boolean isListening;
   private int size = 200;
+  private int baseSize = size;
 
   PApplet parent;
   GPlot plot;
@@ -28,10 +35,6 @@ public class PieChart {
   PImage fade;
     
   public PieChart(PApplet parent) {
-    minim = new Minim(this);
-    in = minim.getLineIn(Minim.STEREO, 512);
-    // a beat detection object SOUND_FREQUENCY based on my mic
-    beat = new BeatDetect(in.bufferSize(), in.sampleRate());
     this.parent = parent;
     int numColors = 100;
     colors = new int[numColors][3];
@@ -42,8 +45,8 @@ public class PieChart {
     }
     
     plot = new GPlot(parent);
-    plot.setPos(425, 0);
-    plot.setDim(300, 300);
+    plot.setPos(posX, posY);
+    plot.setDim(figureWidth, figureHeight);
     
     // Set the plot limits (this will fix them)
     plot.setXLim(-1.2*scale, 1.2*scale);
@@ -74,6 +77,21 @@ public class PieChart {
     //textFont(font);
   }
   
+  public void setCoords(int x, int y, int fWidth, int fHeight) {
+ posX = x;
+ posY = y;
+ figureWidth= fWidth;
+ figureHeight = fHeight;
+     plot.setDim(figureWidth, figureHeight);
+    plot.setPos(posX, posY);
+}
+
+void setAudioInputs(AudioInput in) {
+  this.in = in;
+  minim = new Minim(this);
+  // a beat detection object SOUND_FREQUENCY based on my mic
+  beat = new BeatDetect(in.bufferSize(), in.sampleRate());
+}  
   
 public void startListening() {
   this.isListening = true;
@@ -97,9 +115,6 @@ void drawFFT() {
   plot.setPoints(points);
 }
   
-  
-  
-  
   private void fillColor(int index) {
     fill(colors[index][0], colors[index][1], colors[index][2]);
   }
@@ -108,13 +123,47 @@ void drawFFT() {
     return color(colors[i][0], colors[i][1], colors[i][2]);
   }
   
+  int size1 = size;
+  int size2 = size;
+  int size3 = size;
+  
   private void drawPie(GPlot plot) {
+    if (isListening) {
+    beat.detect(in.mix);
+    if (beat.isSnare()) {
+      size1 = baseSize + 30;
+    } else {
+      size1 -= 5;
+    }
+    if (size1 < baseSize) {
+      size1 = baseSize;
+    }
+    if (beat.isKick()) {
+      size2 = baseSize + 30;
+    } else {
+      size2 -= 5;
+    }
+    if (size2 < baseSize) {
+      size2 = baseSize;
+    }
+    if (beat.isHat()) {
+      size3 = baseSize + 30;
+    } else {
+      size3 -= 5;
+    }
+    if (size3 < baseSize) {
+      size3 = baseSize;
+    }
+    }
+    
     num = 0;
     for (int i=0; i<data.length; i++) {
       num += data[i];
     }
     num = 360/num;
-    angle_1+=2;
+    if (isListening) {
+      angle_1+=2;
+    }
     
     float plotWidth = plot.getDim()[0];    
     float plotHeight = plot.getDim()[1];
@@ -126,20 +175,17 @@ void drawFFT() {
       
       // TODO: remove hard-coded values so that resizing works nicely
       fillColor(i);
-      arc(plotWidth/2, -plotHeight/2, this.size, this.size, radians(angle_2), radians(angle_1));
+      if (i % 2 == 0) {
+        arc(plotWidth/2, -plotHeight/2, size1, size1, radians(angle_2), radians(angle_1));
+      } else if (i % 2 == 1) {
+        arc(plotWidth/2, -plotHeight/2, size2, size2, radians(angle_2), radians(angle_1));
+      } else {
+        arc(plotWidth/2, -plotHeight/2, size3, size3, radians(angle_2), radians(angle_1));        
+      }
     }
   }
   
   public void draw(){
-    beat.detect(in.mix);
-    if (beat.isSnare()) {
-      this.size += 20;
-    } else {
-      this.size -= 5;
-    }
-    if (this.size < 200) {
-      this.size = 200;
-    }
     plot.beginDraw();
     plot.drawBackground();
     plot.drawBox();

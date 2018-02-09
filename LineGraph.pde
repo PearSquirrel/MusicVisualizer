@@ -1,6 +1,12 @@
 public class LineGraph {
+    
+  int posX = 850;
+  int posY = 0;
+  int figureWidth = 300;
+  int figureHeight = 300;
+ 
   private boolean isListening;
-  private int size = 200;
+  private int size = figureWidth;
 
   PApplet parent;
   GPlot plot;
@@ -22,16 +28,12 @@ public class LineGraph {
   // FFT stuff
   Minim minim;
   AudioInput in;
-  FFT fft;
+  //FFT fft;
   BeatDetect beat;
   int w;
   PImage fade;
     
   public LineGraph(PApplet parent) {
-    minim = new Minim(this);
-    in = minim.getLineIn(Minim.STEREO, 512);
-    // a beat detection object SOUND_FREQUENCY based on my mic
-    beat = new BeatDetect(in.bufferSize(), in.sampleRate());
     this.parent = parent;
     int numColors = 100;
     colors = new int[numColors][3];
@@ -42,7 +44,6 @@ public class LineGraph {
     }
     
     plot = new GPlot(parent);
-    plot.setDim(300, 300);
 
     // Prepare the points for the plot
     int nPoints = 100;
@@ -51,12 +52,7 @@ public class LineGraph {
     for (int i = 0; i < nPoints; i++) {
       points.add(i, 10*noise(0.1*i));
     }
-  
-    // Create a new plot and set its position on the screen
-    plot.setPos(850, 0);
-    // or all in one go
-    // GPlot plot = new GPlot(this, 25, 25);
-  
+    
     // Set the plot title and the axis labels
     plot.setTitleText("A very simple example");
     //plot.getXAxis().setAxisLabelText("x axis");
@@ -64,10 +60,27 @@ public class LineGraph {
   
     // Add the points
     plot.setPoints(points);
-  
-    // Draw it!
-    //plot.defaultDraw();
+    
+    plot.setDim(figureWidth, figureHeight);
+    plot.setPos(posX, posY);
   }
+  
+void setAudioInputs(AudioInput in) {
+  this.in = in;
+  // a beat detection object SOUND_FREQUENCY based on my mic
+  beat = new BeatDetect(in.bufferSize(), in.sampleRate());
+  //this.fft = fft;
+}
+  
+public void setCoords(int x, int y, int fWidth, int fHeight) {
+ posX = x;
+ posY = y;
+ figureWidth= fWidth;
+ figureHeight = fHeight;
+ 
+ plot.setDim(figureWidth, figureHeight);
+ plot.setPos(posX, posY);
+}
   
 public void startListening() {
   this.isListening = true;
@@ -100,7 +113,9 @@ void drawWaveForm(GPlot plot) {
     plot.drawTitle();
     //plot.getMainLayer().drawPoints();
     //plot.getLayer("surface").drawFilledContour(GPlot.HORIZONTAL, 0);
-    drawWaveForm(plot);
+    if (isListening) {
+      drawWaveForm(plot);
+    }
     plot.drawLines();
     // make pie slices into layers and replace the legend with real stuff
     // could 1. make slices using a crapton of points, or 2.
